@@ -1,0 +1,25 @@
+{%load static%}
+
+{% include 'ss/head.html'%}
+
+{% include 'ss/nav.html'%}
+
+
+
+<section class="thongtin">
+            <form class="register-form" method="post">
+                <fieldset>
+                    
+                        
+                             {% csrf_token%}
+                            <legend>Đăng ký</legend>
+                            {{ form.as_p}}
+                    
+                        <button type="submit" class='tao' >Đăng ký</button>
+                    
+                </fieldset>
+                <a href=" "> Đã có tài khoản? Đăng nhập </a>
+            </form>
+           
+            </section>
+             

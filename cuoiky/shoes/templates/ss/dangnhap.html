@@ -1,0 +1,19 @@
+{%load static%}
+
+{% include 'ss/head.html'%}
+
+{% include 'ss/nav.html'%}
+
+<section class="thongtin">
+            <form  method="post" autocomplete="off"   >
+                <fieldset>
+                    {% csrf_token %}
+                    <legend>Đăng nhập</legend>
+                    <input type="text"  name="username" placeholder="Tài khoản" class='form-control' 
+                    style="padding: 10px; margin: 5px;">
+                    <input type="password"  name="password" placeholder="Mật khẩu" class='form-control' style="padding: 10px; margin: 5px;">
+                    <button type="submit" class='tao'>Đăng nhập</button>
+                </fieldset>
+                <a href="{% url 'dk' %}"> Chưa có tài khoản? Đăng ký </a>
+            </form>
+        </section>

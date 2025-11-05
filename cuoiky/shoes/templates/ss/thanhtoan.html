@@ -1,0 +1,29 @@
+{% load static %}
+{% load humanize %}
+
+{% include "ss/head.html" %}
+{% include "ss/nav.html" %}
+
+
+<form method="post">
+    {% csrf_token %}
+    <h3>Thông tin giao hàng</h3>
+    <input type="text" name="dia_chi" placeholder="Nhập địa chỉ nhận hàng" required>
+
+    <h3>Phương thức thanh toán</h3>
+    <label>
+        <input type="radio" name="phuong_thuc" value="cod" checked> Thanh toán khi nhận hàng
+    </label><br>
+    <label>
+        <input type="radio" name="phuong_thuc" value="online"> Thanh toán online (VNPay, Momo...)
+    </label>
+
+    <h3>Tổng kết đơn hàng</h3>
+    <p>Tạm tính: {{ tiensp|floatformat:0|intcomma }} đ</p>
+    <p>Phí ship: {{ phigh|floatformat:0|intcomma }} đ</p>
+    <p><b>Tổng cộng: {{ tongcong|floatformat:0|intcomma }} đ</b></p>
+
+    <button type="submit" class="btn btn-success">Xác nhận đặt hàng</button>
+</form>
+
+{% include "ss/footer.html" %}

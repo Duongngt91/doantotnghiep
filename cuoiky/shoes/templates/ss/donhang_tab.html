@@ -1,0 +1,69 @@
+ {% load static %}
+{% load humanize %}
+ 
+{% for hd in list_hd  %}
+        {% if hd.trang_thai == trangthai %}
+        
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <strong>Đơn hàng #{{ hd.id }}</strong>
+                    <span class="badge 
+                        {% if hd.trang_thai == 'pending' %} bg-warning text-dark
+                        {% elif hd.trang_thai == 'confirmed' %} bg-info
+                        {% elif hd.trang_thai == 'shipping' %} bg-primary
+                        {% elif hd.trang_thai == 'delivered' %} bg-success
+                        {% else %} bg-danger
+                        {% endif %}
+                    ">
+                        {{ hd.get_trang_thai_display }}
+                    </span>
+                </div>
+
+                <div class="card-body">
+                    <p><strong>Ngày đặt:</strong> {{ hd.ngay_tao|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Địa chỉ:</strong> {{ hd.dia_chi }}</p>
+                    <p><strong>Phương thức thanh toán:</strong> {{ hd.get_phuong_thuc_display }}</p>
+
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Size</th>
+                                <th>Số lượng</th>
+                                <th>Đơn giá</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for c in ct %}
+                                 {% if c.hoa_don.id == hd.id %}
+                                     <tr>
+                                        <td>{{ c.size_sanpham.sanpham.ten_sp }}</td>
+                                        <td>{{ c.size_sanpham.size }}</td>
+                                        <td>{{ c.so_luong }}</td>
+                                        <td>{{ c.don_gia|floatformat:0|intcomma }} đ</td>
+                                        <td>{{ c.thanhtien|floatformat:0|intcomma }} đ</td>
+                                     </tr>
+                                {%endif%}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="text-end">
+                        {%if hd.trang_thai == 'pending' %}
+                            <p><strong>Phí ship:</strong> {{ hd.phi_ship|floatformat:0|intcomma }} đ</p>
+                            <p><strong>Tổng cộng:</strong> {{ hd.tongcong|floatformat:0|intcomma }} đ</p>
+                            <a href="{%url 'huy' hd.id%}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        {%else%}
+                        <p><strong>Phí ship:</strong> {{ hd.phi_ship|floatformat:0|intcomma }} đ</p>
+                        <p><strong>Tổng cộng:</strong> {{ hd.tongcong|floatformat:0|intcomma }} đ</p>
+                        {%endif%}
+                        
+                    </div>
+                </div>
+            </div>
+        {% endif %} 
+    {% endfor %}
+   

@@ -1,0 +1,19 @@
+{%load static%}
+{% load humanize %}
+
+{% include 'ss/head.html'%}
+
+{% include 'ss/header.html'%}
+{% include 'ss/nav.html'%}
+
+{% include 'ss/hang.html'%}
+{% include 'ss/section.html'%}
+
+<p> Hãng {{hang.ten_ncc}} </p>
+{% for d in danhmuc %}
+
+    <div class="brand">
+          <a href = "{% url 'ctdm' hang.id d.id %}">{{d.ten_dm}} </a>
+        </div>
+     
+{%endfor%}

@@ -1,0 +1,158 @@
+{% load static %}
+{% load humanize%}
+ 
+
+<html>
+    {% include 'ss/head.html' %}
+
+    {% include "ss/nav.html" %}
+
+
+    {% csrf_token %}
+    <article class="bangsp">
+       <img src="{{ctsp.hinh_anh.first.hinh.url}}"
+     class="img-fluid rounded shadow"   >
+          
+        
+        <section class="noidung">
+            <p class="ten">
+                [New chính hãng] {{ ctsp.ten_sp }}
+            </p>
+            <p class="noidung1">
+                &nbsp; -Thương hiệu: {{ ctsp.nhacungcap }} <br>
+                &nbsp; -Mã sản phẩm: {{ ctsp.ma_sp }} <br>
+                &nbsp; -Mô tả: {{ ctsp.mo_ta }} <br>
+                &nbsp; -Giá tốt nhất thị trường <br>
+                &nbsp; -Xem trực tiếp sản phẩm tại: 122/27/117/9/9 Tôn Đản Phường Khánh Hội TP.HCM  <br>
+            </p>
+            
+                {%if ctsp.giam_gia%}
+                    Giá: <span id='giatien'> <s style ="color: black; font-size:20px">{{ ctsp.gia | floatformat:0 | intcomma }} </s> 
+                    &nbsp{{  ctsp.giam_gia | floatformat:0 | intcomma }} </span> <br>
+                {%else%}
+                    Giá: <span id='giatien'>
+                    {{ ctsp.gia | floatformat:0 | intcomma }} </span> <br>
+                {%endif%}
+            
+
+{% comment %} <form id="themGioForm" class="khung" >
+    {% csrf_token %}
+ 
+
+    
+</form> {% endcomment %}
+
+
+
+{% if user.is_authenticated %}
+    {% if user.is_staff %}
+        
+        <form action="{% url 'x' ctsp.ma_sp %}" method="post" style="margin-top:10px;">
+            {% csrf_token %}
+            <button class="o1 btn-card bi" type="submit" name='x'>Xóa sản phẩm</button> 
+        </form>
+        <button class="o2 bi" type="submit" name='s'>Sửa sản phẩm</button>
+    {% else %}
+        
+        <form method="post" action="{% url 'tvg' %} " class="khung">
+            {% csrf_token %}
+            
+            
+            <input type="hidden" name="masp" value="{{ ctsp.ma_sp }}">
+
+            
+            <label class="noidung1">Size [kích thước]</label><br>
+            <select name="size_id" id="size-select">
+                <option value="">Chọn size</option>
+                {% for s in soluong %}
+                    <option value="{{ s.id }}" 
+                            data-soluong="{{ s.so_luong }}" 
+                            data-gia="{{ s.gia_tuy_chinh }}">
+                        Size {{ s.size.size }}
+                    </option>
+                {% endfor %}
+            </select>
+            <span id="tonkho"></span><br>
+
+            <!-- Số lượng -->
+            <label class="noidung1">Số lượng:</label><br>
+            <input type="number" name="sl" min="1" value="1" style="width:15%" class="noidung1"><br>
+
+            <!-- Nút -->
+            <button class="o1 btn-card bi bi-cart-plus" type="submit" name="action" value="add">
+                Thêm vào giỏ
+            </button>
+            <button class="o2 bi bi-wallet2" type="submit" name="action" value="buy">
+                Mua ngay
+            </button>
+        </form>
+    {% endif %}
+{% else %}
+    <p class="noidung1">
+        Hãy đăng nhập để mua hàng 
+        <a href="{% url 'dn' %}">Tại đây</a>
+    </p>
+    <p class="noidung1">
+        Hoặc tạo tài khoản mới 
+        <a href="{% url 'dk' %}">Tại đây</a>
+    </p>
+{% endif %}
+            
+        </section>
+
+    </article>
+
+    <div class="tabs-pro-detail">
+        <ul class="nav nav-tabs" id="tabsProDetail" role="tablist"> 
+            <li class="nav-item">
+                <a class="nav-link active" id="info-pro-detail-tab" data-toggle="tab" 
+                  href="#info-product" aria-selected="true">Thông tin sản phẩm</a>
+            </li>
+
+              <li class="nav-item">
+                <a class="nav-link active" id="commentfb-pro-detail-tab" data-toggle="tab" 
+                href="#commentfb-pro-detail" role="tab" aria-selected="true">Bình luận</a>
+            </li>
+        </ul>
+    </div>   
+    <div class="banggt">
+            <img src="{% static "images/hinhanh/logo.jpg" %}" alt="">
+            <p class="gt1">
+                - Sản phẩm trước khi đến tay khách hàng đã được Shop xử lí, 
+                kiểm tra thật kỹ càng cùng với sự cam kết 100% chính hãng trọn đời (Fake - Hoàn Tiền -Tặng Hàng ) 
+                . Kèm với đó là chính sách bảo hành trong vòng 6 tháng, đổi 1:1 với những sản phẩm bị lỗi
+                trong 1 tháng sử dụng. Để mọi người có thể yên tâm, thoải mái lựa chọn mà không phải sợ hàng kém chất lượng, hàng giả, hàng nhái,...
+                <hr width="60%" size="4px" color="Green" style="margin-left:240px">
+            </p>
+            <p class="gt2">
+               <b> Địa chỉ shop </b> <br> <br>
+
+                122/27/117/9/9 Tôn Đản Phường Khánh Hội Tp.Hồ Chí Minh Việt Nam.  <br>  <br>                             
+                 
+                <b>Hotline</b> : 0925 191 336 ( Mr. Tài) <br> <br>
+                
+                <u>Nếu bạn ở xa thì hãy truy cập</u> <br> <br>
+                
+                <b>Website</b> : <u><a href="{% url 'tc'%}">shopnmt.com</a></u>
+                 
+            </p>
+        <div>  
+</html>
+
+
+<script>
+ document.getElementById("size-select").addEventListener("change", function () {
+    const selectedOption = this.options[this.selectedIndex];
+    const soluong = selectedOption.dataset.soluong;
+    const gia = selectedOption.dataset.gia;
+
+    document.getElementById("tonkho").textContent = soluong ? `Tồn kho: ${soluong} sản phẩm` : '';
+
+    if(gia){
+      const giadoi = new Intl.NumberFormat('vi-VN').format(gia);
+      document.getElementById("giatien").textContent = giadoi;
+    }
+});
+</script>
+
+
