@@ -1,163 +1,135 @@
-{%load static%}
+{% load static %}
 
+<style>
+.section1 {
+  background-color: #FFFFFF;
+  padding: 2rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
 
-{% comment %} <style> 
+.introduction {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 30%;
+}
 
-    .section1 {
-    background-color: #FFFFFF;
-    padding: 2rem;
-    margin: 1rem 0;
-    border-radius: 8px;
-    display: flex;
-  }
+.introduction .cta {
+  display: inline-block;
+  font-size: 15px;
+  background-color: #8C94C9;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  text-decoration: none;
+  text-align: center;
+  transition: background-color 0.4s ease;
+}
+.introduction .cta:hover {
+  background-color: #3F4B97;
+  transition: background-color 0.4s ease;
+}
 
-  .introduction {
-    flex: 1;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    width: 30%;
-  }
+/* banner */
+.banners-parent {
+  position: relative;
+  width: 100%;
+  max-width: 1024px;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 8px;
+}
 
-  .introduction a button {
-    font-size: 15px;
-    background-color: #8C94C9;
-    color: white;
-    padding: 20px 30px;
-    border: none;
-    border-radius: 35px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.4s;
-  }
+.banners {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 100%;
+}
 
-  .introduction a button:hover {
-    background-color: #3F4B97;
-    transition: background-color 0.4s;
+.banners img {
+  width: 100%;
+  height: 300px;
+  flex: 0 0 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
 
-    
-  }
+.banner-btn-left,
+.banner-btn-right {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.7);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10;
+  padding: 8px;
+  font-size: 20px;
+}
+.banner-btn-left { left: 10px; }
+.banner-btn-right { right: 10px; }
+</style>
 
-  .banners-parent {
-    position: relative;
-    width: 1024px;
-    height: 300px;
-    overflow: hidden;
-    border-radius: 8px;
-  }
-
-  .banners {
-    display: flex;
-    transition: transform 0.5s ease-in-out;
-    height: 100%;
-  }
-
-  .banners img {
-    width: 1024px;
-    height: 300px;
-    flex: 0 0 1024px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-
-  .banner-btn-left,
-  .banner-btn-right {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.7);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 10;
-    padding: 10px;
-    font-size: 25px;
-    transition: background 0.3s;
-  }
-
-  .banner-btn-left:hover,
-  .banner-btn-right:hover {
-    background: rgba(255, 255, 255, 0.9);
-  }
-
-  .banner-btn-left {
-    left: 10px;
-  }
-
-  .banner-btn-right {
-    right: 10px;
-  }
-
-</style> {% endcomment %}
 <section class="section1">
-    <!-- Left Content -->
-    <div class="introduction">
-      <h1>Chào mừng bạn đến với TDK SHOES</h1>
-       
-      <a>
-        <button>
-         <a style=" text-decoration: none;
-    color: black;" href="{% url 'gt'%}"> Tìm Hiểu </a>
-        </button>
-      </a>
-    </div>
+  <div class="introduction">
+    <h1>Chào mừng bạn đến với TDK SHOES</h1>
+    <a class="cta" href="{% url 'gt' %}">Tìm Hiểu</a>
+  </div>
 
-    <!-- Right Banner -->
-    <div>
-      <div class="banners-parent">
-        <button class="banner-btn-left">
-          <i class="fa-solid fa-caret-left"></i>
-        </button>
-        <div class="banners">
-          <img src="{% static 'images/hinhanh/banner1.png'%}" alt="Banner 1">
-          <img src="{% static 'images/hinhanh/banner2.png'%}" alt="Banner 2">
-          <img src="{% static 'images/hinhanh/banner3.png'%}" alt="Banner 3">
-        </div>
-        <button class="banner-btn-right">
-          <i class="fa-solid fa-caret-right"></i>
-        </button>
+  <div>
+    <div class="banners-parent">
+      <button class="banner-btn-left" aria-label="Trước">‹</button>
+      <div class="banners">
+        <img src="{% static 'images/hinhanh/banner1.png' %}" alt="Banner 1">
+        <img src="{% static 'images/hinhanh/banner2.png' %}" alt="Banner 2">
+        <img src="{% static 'images/hinhanh/banner3.png' %}" alt="Banner 3">
       </div>
+      <button class="banner-btn-right" aria-label="Sau">›</button>
     </div>
-  </section>
+  </div>
+</section>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const banners = document.querySelector('.banners');
+  const bannerImages = document.querySelectorAll('.banners img');
+  const btnLeft = document.querySelector('.banner-btn-left');
+  const btnRight = document.querySelector('.banner-btn-right');
 
-  <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const banners = document.querySelector('.banners');
-    const bannerImages = document.querySelectorAll('.banners img');
-    const btnLeft = document.querySelector('.banner-btn-left');
-    const btnRight = document.querySelector('.banner-btn-right');
+  let currentIndex = 0;
+  const totalBanners = bannerImages.length;
 
-    let currentIndex = 0;
-    const totalBanners = bannerImages.length;
-    const bannerWidth = 1024; // phải khớp CSS width
+  function getBannerWidth() {
+    return bannerImages[0] ? bannerImages[0].clientWidth : 0;
+  }
 
-    function showBanner(index) {
-      if (index < 0) {
-        currentIndex = totalBanners - 1;
-      } else if (index >= totalBanners) {
-        currentIndex = 0;
-      } else {
-        currentIndex = index;
-      }
+  function showBanner(index) {
+    if (index < 0) index = totalBanners - 1;
+    if (index >= totalBanners) index = 0;
+    currentIndex = index;
+    const offset = -currentIndex * getBannerWidth();
+    banners.style.transform = `translateX(${offset}px)`;
+  }
 
-      const offset = -currentIndex * bannerWidth;
-      banners.style.transform = `translateX(${offset}px)`;
-    }
+  btnLeft.addEventListener('click', () => showBanner(currentIndex - 1));
+  btnRight.addEventListener('click', () => showBanner(currentIndex + 1));
 
-    // Nút trái
-    btnLeft.addEventListener('click', function () {
-      showBanner(currentIndex - 1);
-    });
+  // điều chỉnh khi resize để vẫn chính xác
+  window.addEventListener('resize', () => showBanner(currentIndex));
 
-    // Nút phải
-    btnRight.addEventListener('click', function () {
-      showBanner(currentIndex + 1);
-    });
+  // auto slide
+  setInterval(() => showBanner(currentIndex + 1), 5000);
 
-    // Tự động chuyển banner mỗi 5 giây
-    setInterval(function () {
-      showBanner(currentIndex + 1);
-    }, 5000);
-  });
+  // khởi tạo
+  showBanner(0);
+});
 </script>
