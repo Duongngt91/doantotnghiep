@@ -11,7 +11,7 @@
    
     
     <article class="bangsp">
-        <img src="{{ctsp.hinh_anh.first.hinh.url}}" alt="" class="sp">
+        <img id="product-image" src="{{ctsp.hinh_anh.first.hinh.url}}" alt="" class="sp">
         <section class="noidung">
            [New Chính Hãng] {{ctsp.ten_sp}}
            <p class="noidung1">
@@ -62,13 +62,18 @@
             </select>
             <span id="tonkho"></span><br>
 
-    <label class="noidung1">Số lượng:</label><br>
-    <input type="number" name="sl" min="1" value="1" style="width:15%;" class="noidung1"><br>
+            <label class="noidung1">Số lượng:</label><br>
+            <div class="qty-control" style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+                <button type="button" id="decrease-btn" class="btn btn-sm btn-outline-secondary">-</button>
+                <input type="number" name="sl" id="quantity-input" min="1" value="1" style="text-align:center; width:70px;" class="noidung1">
+                <button type="button" id="increase-btn" class="btn btn-sm btn-outline-secondary">+</button>
+            </div>
 
             <!-- Nút -->
-            <button class="o1 btn-card bi bi-cart-plus" type="submit" name="action" value="add">
+            <button id="add-to-cart-btn" class="o1 btn-card bi bi-cart-plus" type="button">
                 Thêm vào giỏ
             </button>
+            <input type="hidden" id="action-input" name="action" value="add" style="display:none;">
             <button class="o2 bi bi-wallet2" type="submit" name="action" value="buy">
                 Mua ngay
             </button>
@@ -107,6 +112,115 @@
     if(gia){
       const giadoi = new Intl.NumberFormat('vi-VN').format(gia);
       document.getElementById("giatien").textContent = giadoi;
+    }
+});
+</script>
+
+<script>
+// Quantity buttons (increase/decrease) behavior
+const sizeSelectEl = document.getElementById('size-select');
+const qtyInputEl = document.getElementById('quantity-input');
+const incBtn = document.getElementById('increase-btn');
+const decBtn = document.getElementById('decrease-btn');
+
+function updateMaxFromSelected() {
+    const opt = sizeSelectEl.options[sizeSelectEl.selectedIndex];
+    const max = opt && opt.dataset && opt.dataset.soluong ? parseInt(opt.dataset.soluong, 10) : null;
+    if (max !== null) {
+        qtyInputEl.max = max;
+        if (parseInt(qtyInputEl.value, 10) > max) qtyInputEl.value = max;
+    } else {
+        qtyInputEl.removeAttribute('max');
+    }
+    // update button disabled state
+    const current = parseInt(qtyInputEl.value || '1', 10);
+    if (incBtn) incBtn.disabled = !!(max && current >= max);
+    if (decBtn) decBtn.disabled = current <= 1;
+}
+
+if (sizeSelectEl) sizeSelectEl.addEventListener('change', updateMaxFromSelected);
+
+if (incBtn) incBtn.addEventListener('click', () => {
+    const max = qtyInputEl.max ? parseInt(qtyInputEl.max, 10) : null;
+    let v = parseInt(qtyInputEl.value || '1', 10);
+    if (max && v >= max) {
+        alert(`Chỉ còn ${max} sản phẩm trong kho`);
+        return;
+    }
+    v += 1;
+    qtyInputEl.value = v;
+    updateMaxFromSelected();
+});
+
+if (decBtn) decBtn.addEventListener('click', () => {
+    let v = parseInt(qtyInputEl.value || '1', 10);
+    if (v <= 1) {
+        alert('Số lượng tối thiểu là 1');
+        return;
+    }
+    v -= 1;
+    qtyInputEl.value = v;
+    updateMaxFromSelected();
+});
+
+// initialize on load
+document.addEventListener('DOMContentLoaded', updateMaxFromSelected);
+
+// Fly-to-cart animation and update cart count
+const addBtn = document.getElementById('add-to-cart-btn');
+const productImg = document.getElementById('product-image');
+const cartIcon = document.getElementById('cart-icon');
+const cartCountEl = document.getElementById('cart-count');
+const qtyInput = document.getElementById('quantity-input');
+
+function animateToCart(imgEl, qty){
+    if(!imgEl || !cartIcon) return Promise.resolve();
+    const imgRect = imgEl.getBoundingClientRect();
+    const cartRect = cartIcon.getBoundingClientRect();
+
+    const clone = imgEl.cloneNode(true);
+    clone.style.position = 'fixed';
+    clone.style.left = imgRect.left + 'px';
+    clone.style.top = imgRect.top + 'px';
+    clone.style.width = imgRect.width + 'px';
+    clone.style.height = imgRect.height + 'px';
+    clone.style.transition = 'transform 0.7s ease-in-out, opacity 0.7s ease-in-out';
+    clone.style.zIndex = 9999;
+    clone.style.pointerEvents = 'none';
+    document.body.appendChild(clone);
+
+    // compute translate
+    const deltaX = (cartRect.left + cartRect.width/2) - (imgRect.left + imgRect.width/2);
+    const deltaY = (cartRect.top + cartRect.height/2) - (imgRect.top + imgRect.height/2);
+    requestAnimationFrame(() => {
+        clone.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(0.2)`;
+        clone.style.opacity = '0.6';
+    });
+
+    return new Promise(resolve => {
+        clone.addEventListener('transitionend', () => {
+            clone.remove();
+            resolve();
+        }, { once: true });
+    });
+}
+
+addBtn && addBtn.addEventListener('click', async function(e){
+    const form = this.closest('form');
+    const qty = Math.max(1, parseInt(qtyInput ? qtyInput.value : '1', 10) || 1);
+    // run animation
+    await animateToCart(productImg, qty);
+    // update cart count visually
+    if(cartCountEl){
+        const current = parseInt(cartCountEl.textContent || '0', 10) || 0;
+        cartCountEl.textContent = current + qty;
+    }
+    // submit the form after animation
+    if(form){
+        // ensure hidden action input exists for server
+        const actionInput = document.getElementById('action-input');
+        if(actionInput) actionInput.value = 'add';
+        form.submit();
     }
 });
 </script>

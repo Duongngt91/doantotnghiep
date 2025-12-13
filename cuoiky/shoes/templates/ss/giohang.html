@@ -14,7 +14,7 @@
                     
                     {% if ct %}
                         {% for item in ct %}
-                            <div class="row cart-items mb-3 align-items-center">
+                            <div class="row cart-items mb-3 align-items-center" data-unitprice="{{ item.don_gia }}" data-stock="{{ item.size_sanpham.so_luong }}">
                                 <!-- Ảnh sản phẩm -->
                                 <div class="col-md-3 mb-3">
                                     {% if item.size_sanpham.sanpham.hinh_anh.first %}
@@ -32,16 +32,17 @@
 
                                 <!-- Số lượng -->
                                  <div class="col-md-2 quantity-control">
-                                    <button class="decrease">-</button>
+                                    <button class="decrease btn btn-sm btn-outline-secondary">-</button>
+                                        <input type="hidden" class="qty-input" name="quantity-{{item.id}}" value="{{item.so_luong}}">
                                         <span class="qty">{{item.so_luong}}</span>
-                                        <button class="increase">+</button>
+                                        <button class="increase btn btn-sm btn-outline-secondary">+</button>
                                 </div> 
 
     
 
                                 <!-- Giá + xóa -->
                                 <div class="col-md-2 text-end">
-                                    <p class="fw-bold">{{ item.thanhtien|floatformat:0|intcomma }} đ</p>
+                                    <p class="fw-bold line-total">{{ item.thanhtien|floatformat:0|intcomma }} đ</p>
                                     <a href="{% url 'xgh' item.id %}" class="btn btn-sm btn-outline-danger">
                                         <i class="bi bi-trash"></i>
                                     </a>
@@ -68,11 +69,8 @@
                 <div class="card-body">
                     <h5 class="card-title mb-4">Order Summary</h5>
                     <div class="d-flex justify-content-between mb-3">
-                        
                         <span>Tạm tính</span>
-                        
-                        <span> {{tongtien|floatformat:0|intcomma}}đ</span>
-                        
+                        <span id="subtotal-amount">{{ tongtien|floatformat:0|intcomma }}đ</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3">
                         <span>Phí vận chuyển</span>
@@ -81,7 +79,7 @@
                     <hr>
                     <div class="d-flex justify-content-between mb-4">
                         <strong>Tổng tiền</strong>
-                        <strong> {{tongtien|floatformat:0|intcomma}}đ</strong>
+                        <strong id="total-amount">{{ tongtien|floatformat:0|intcomma }}đ</strong>
                     </div>
                     <a href="{% url 'tt'%}"> <button class="btn btn-primary w-100">Proceed to Checkout</button> </a>
                     
@@ -101,6 +99,82 @@
         </div>
     </div>
 </div>
+
+<script>
+// Update line totals and cart total when quantity changes via +/- buttons
+function formatVND(num){
+    return new Intl.NumberFormat('vi-VN').format(num) + 'đ';
+}
+
+function recalcCart(){
+    const rows = document.querySelectorAll('.cart-items');
+    let subtotal = 0;
+    rows.forEach(r => {
+        const unit = parseFloat(r.dataset.unitprice) || 0;
+        const qtySpan = r.querySelector('.qty');
+        const qtyInput = r.querySelector('.qty-input');
+        const qty = parseInt(qtyInput ? qtyInput.value : (qtySpan ? qtySpan.textContent : '0'), 10) || 0;
+        const lineTotal = unit * qty;
+        const lineEl = r.querySelector('.line-total');
+        if(lineEl){
+            lineEl.textContent = formatVND(lineTotal);
+        }
+        subtotal += lineTotal;
+    });
+    const subtotalEl = document.getElementById('subtotal-amount');
+    const totalEl = document.getElementById('total-amount');
+    if(subtotalEl) subtotalEl.textContent = formatVND(subtotal);
+    if(totalEl) totalEl.textContent = formatVND(subtotal);
+}
+
+document.addEventListener('click', function(e){
+    if(e.target.matches('.increase') || e.target.matches('.decrease')){
+        const row = e.target.closest('.cart-items');
+        if(!row) return;
+        const qtySpan = row.querySelector('.qty');
+        const qtyInput = row.querySelector('.qty-input');
+        const incBtn = row.querySelector('.increase');
+        const decBtn = row.querySelector('.decrease');
+        let qty = parseInt(qtyInput ? qtyInput.value : (qtySpan ? qtySpan.textContent : '0'), 10) || 0;
+        const stock = parseInt(row.dataset.stock || '0', 10);
+
+        if(e.target.matches('.increase')){
+            // nếu kho <= 1 -> thông báo còn lại 1 đôi và giữ 1
+            if(stock <= 1){
+                alert('Chỉ còn 1 đôi trong kho');
+                qty = 1;
+            } else if(qty >= stock){
+                // đã đạt tối đa
+                alert(`Chỉ còn ${stock} sản phẩm trong kho`);
+                qty = stock;
+            } else {
+                qty += 1;
+            }
+        } else {
+            // decrease
+            if(qty <= 1){
+                alert('Số lượng tối thiểu là 1');
+                qty = 1;
+            } else {
+                qty -= 1;
+            }
+        }
+
+        // cập nhật trạng thái nút
+        if(incBtn) incBtn.disabled = !!(stock && qty >= stock);
+        if(decBtn) decBtn.disabled = qty <= 1;
+
+        if(qtyInput) qtyInput.value = qty;
+        if(qtySpan) qtySpan.textContent = qty;
+        recalcCart();
+    }
+});
+
+// initialize formatting on load
+document.addEventListener('DOMContentLoaded', function(){
+    recalcCart();
+});
+</script>
 
 <script src="{% static 'js/AllJS.js'%}"></script>
 
