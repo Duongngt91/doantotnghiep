@@ -1,13 +1,10 @@
 
-{% load static%}
-
-
-{%include 'ss/head.html'%}
+{% load static %}
 
 <header>
     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; list-style:none;">
       <div>
-        <img src="{% static 'images/hinhanh/logo.png'%}" alt="" style="height: 150px;" />
+        <img src="{% static 'images/hinhanh/logo.png' %}" alt="TDK Logo" style="height: 150px;" />
       </div>
       <nav>
        <div class="header-search">
@@ -29,8 +26,8 @@
             {%endfor%}
         
           </div>
-        
-        
+
+
         </div>
         {%if not user.is_authenticated%}
         {%if request.resolver_match.url_name == 'dn'%}
@@ -87,3 +84,21 @@
       </nav>
     </div>
   </header>
+  <script>
+    (function(){
+      const toggle = document.getElementById('shop-toggle');
+      const list = document.getElementById('shop-list');
+      if(!toggle || !list) return;
+
+      // show on hover
+      const parent = toggle.parentElement;
+      parent.addEventListener('mouseenter', () => { list.style.display = 'block'; });
+      parent.addEventListener('mouseleave', () => { list.style.display = 'none'; });
+
+      // toggle on click (for mobile)
+      toggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        list.style.display = (list.style.display === 'block') ? 'none' : 'block';
+      });
+    })();
+  </script>

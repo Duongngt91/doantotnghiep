@@ -207,7 +207,22 @@ function animateToCart(imgEl, qty){
 
 addBtn && addBtn.addEventListener('click', async function(e){
     const form = this.closest('form');
-    const qty = Math.max(1, parseInt(qtyInput ? qtyInput.value : '1', 10) || 1);
+    // ensure size selected
+    const selectedSize = sizeSelectEl ? sizeSelectEl.value : null;
+    if (!selectedSize) {
+        alert('Vui lòng chọn size giày trước khi thêm vào giỏ.');
+        return;
+    }
+    // quantity and stock check
+    let qty = Math.max(1, parseInt(qtyInputEl ? qtyInputEl.value : '1', 10) || 1);
+    const selectedOpt = sizeSelectEl.options[sizeSelectEl.selectedIndex];
+    const stock = selectedOpt && selectedOpt.dataset && selectedOpt.dataset.soluong ? parseInt(selectedOpt.dataset.soluong, 10) : null;
+    if (stock !== null && qty > stock) {
+        alert(`Số lượng yêu cầu vượt quá tồn kho. Chỉ còn ${stock} đôi.`);
+        qty = stock;
+        if (qtyInputEl) qtyInputEl.value = qty;
+    }
+
     // run animation
     await animateToCart(productImg, qty);
     // update cart count visually
