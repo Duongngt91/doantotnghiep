@@ -476,7 +476,7 @@ h2 {
 
     
     .cart-item-list {
-        height: 100px;
+        max-height: 260px;
         overflow-y: auto;
         padding-right: 8px;
     }
