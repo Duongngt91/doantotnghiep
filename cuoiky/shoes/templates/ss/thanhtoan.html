@@ -15,61 +15,50 @@
             <div class="cart-left">
                 <h3>Thanh Toán</h3>
 
-                {% if mua_ngay %}
-                <!-- Hiển thị sản phẩm MUA NGAY -->
-                <div class="cart-item">
-                    <div class="cart-warper">
-
-                        <img src="{{ mua_ngay.size.sanpham.hinh_anh.first.hinh.url }}" alt="Sản phẩm">
-
-                        <div class="cart-info">
-                            <h4>Tên: {{ mua_ngay.size.sanpham.ten_sp }}</h4>
-                            <p>Mã: {{ mua_ngay.size.sanpham.ma_sp }}</p>
-                            <p>Size: {{ mua_ngay.size.size }}</p>
-
-                            <p style="color:red; font-weight:bold; font-size:18px;">
-                                {{ mua_ngay.dongia|floatformat:0|intcomma }} đ
-                            </p>
-
-                            <div class="quantity-control">
-                                Số lượng: {{ mua_ngay.soluong }}
+                <!-- Hiển thị các sản phẩm (MUA NGAY nếu có, và toàn bộ GIỎ HÀNG) -->
+                <div class="cart-item-list">
+                    {% if mua_ngay %}
+                    <div class="cart-item">
+                        <div class="cart-warper">
+                            <img src="{{ mua_ngay.size.sanpham.hinh_anh.first.hinh.url }}" alt="Sản phẩm">
+                            <div class="cart-info">
+                                <h4>Tên: {{ mua_ngay.size.sanpham.ten_sp }}</h4>
+                                <p>Mã: {{ mua_ngay.size.sanpham.ma_sp }}</p>
+                                <p>Size: {{ mua_ngay.size.size }}</p>
+                                <p style="color:red; font-weight:bold; font-size:18px;">
+                                    {{ mua_ngay.dongia|floatformat:0|intcomma }} đ
+                                </p>
+                                <div class="quantity-control">
+                                    Số lượng: {{ mua_ngay.soluong }}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                    {% endif %}
 
-                {% else %}
-                <!-- Hiển thị GIỎ HÀNG -->
-                {% for item in ct %}
-                <div class="cart-item">
-
-                    <div class="cart-warper">
-
-                        <img src="{{ item.size_sanpham.sanpham.hinh_anh.first.hinh.url }}" alt="Sản phẩm">
-
-                        <div class="cart-info">
-                            <h4>Tên: {{ item.size_sanpham.sanpham.ten_sp }}</h4>
-                            <p>Mã: {{ item.size_sanpham.sanpham.ma_sp }}</p>
-                            <p>Size: {{ item.size_sanpham.size.size }}</p>
-
-                            <p style="color:red; font-weight:bold; font-size:18px;">
-                                {{ item.size_sanpham.sanpham.gia_ban|floatformat:0|intcomma }} đ
-                            </p>
-
-                            <div class="quantity-control">
-                                Số lượng: {{ item.so_luong }}
+                    {% if ct and ct.exists %}
+                        {% for item in ct %}
+                        <div class="cart-item">
+                            <div class="cart-warper">
+                                <img src="{{ item.size_sanpham.sanpham.hinh_anh.first.hinh.url }}" alt="Sản phẩm">
+                                <div class="cart-info">
+                                    <h4>Tên: {{ item.size_sanpham.sanpham.ten_sp }}</h4>
+                                    <p>Mã: {{ item.size_sanpham.sanpham.ma_sp }}</p>
+                                    <p>Size: {{ item.size_sanpham.size.size }}</p>
+                                    <p style="color:red; font-weight:bold; font-size:18px;">
+                                        {{ item.size_sanpham.sanpham.gia_ban|floatformat:0|intcomma }} đ
+                                    </p>
+                                    <div class="quantity-control">
+                                        Số lượng: {{ item.so_luong }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                    </div>
-
+                        {% endfor %}
+                    {% else %}
+                        <p style="text-align:center; font-weight:bold; margin-top:20px;">Giỏ hàng trống</p>
+                    {% endif %}
                 </div>
-                {% empty %}
-                <p style="text-align:center; font-weight:bold; margin-top:20px;">
-                    Giỏ hàng trống
-                </p>
-                {% endfor %}
-                {% endif %}
 
                 <p>* Kiểm hàng trước khi nhận.</p>
                 <p>* Nội thành: 1–3 ngày / Ngoại thành: 3–4 ngày.</p>

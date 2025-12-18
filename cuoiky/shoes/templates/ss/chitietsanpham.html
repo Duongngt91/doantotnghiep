@@ -117,7 +117,7 @@
 </script>
 
 <script>
-// Quantity buttons (increase/decrease) behavior
+// Nút số lượng (tăng/giảm)
 const sizeSelectEl = document.getElementById('size-select');
 const qtyInputEl = document.getElementById('quantity-input');
 const incBtn = document.getElementById('increase-btn');
@@ -132,7 +132,7 @@ function updateMaxFromSelected() {
     } else {
         qtyInputEl.removeAttribute('max');
     }
-    // update button disabled state
+
     const current = parseInt(qtyInputEl.value || '1', 10);
     if (incBtn) incBtn.disabled = !!(max && current >= max);
     if (decBtn) decBtn.disabled = current <= 1;
@@ -163,10 +163,10 @@ if (decBtn) decBtn.addEventListener('click', () => {
     updateMaxFromSelected();
 });
 
-// initialize on load
+// Khởi tạo
 document.addEventListener('DOMContentLoaded', updateMaxFromSelected);
 
-// Fly-to-cart animation and update cart count
+// Hoạt ảnh Fly-to-cart và cập nhật số lượng giỏ hàng
 const addBtn = document.getElementById('add-to-cart-btn');
 const productImg = document.getElementById('product-image');
 const cartIcon = document.getElementById('cart-icon');
@@ -189,7 +189,6 @@ function animateToCart(imgEl, qty){
     clone.style.pointerEvents = 'none';
     document.body.appendChild(clone);
 
-    // compute translate
     const deltaX = (cartRect.left + cartRect.width/2) - (imgRect.left + imgRect.width/2);
     const deltaY = (cartRect.top + cartRect.height/2) - (imgRect.top + imgRect.height/2);
     requestAnimationFrame(() => {
@@ -207,13 +206,13 @@ function animateToCart(imgEl, qty){
 
 addBtn && addBtn.addEventListener('click', async function(e){
     const form = this.closest('form');
-    // ensure size selected
+    
     const selectedSize = sizeSelectEl ? sizeSelectEl.value : null;
     if (!selectedSize) {
         alert('Vui lòng chọn size giày trước khi thêm vào giỏ.');
         return;
     }
-    // quantity and stock check
+    // Kiểm tra số lượng và hàng tồn kho
     let qty = Math.max(1, parseInt(qtyInputEl ? qtyInputEl.value : '1', 10) || 1);
     const selectedOpt = sizeSelectEl.options[sizeSelectEl.selectedIndex];
     const stock = selectedOpt && selectedOpt.dataset && selectedOpt.dataset.soluong ? parseInt(selectedOpt.dataset.soluong, 10) : null;
@@ -223,16 +222,16 @@ addBtn && addBtn.addEventListener('click', async function(e){
         if (qtyInputEl) qtyInputEl.value = qty;
     }
 
-    // run animation
+    // chạy ảnh động animation
     await animateToCart(productImg, qty);
-    // update cart count visually
+    // Cập nhật số lượng giỏ hàng
     if(cartCountEl){
         const current = parseInt(cartCountEl.textContent || '0', 10) || 0;
         cartCountEl.textContent = current + qty;
     }
-    // submit the form after animation
+
     if(form){
-        // ensure hidden action input exists for server
+        
         const actionInput = document.getElementById('action-input');
         if(actionInput) actionInput.value = 'add';
         form.submit();

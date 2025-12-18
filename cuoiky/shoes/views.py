@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
+from django.http import JsonResponse
 from shoes.models import Danhmuc,SanPham,HinhAnhSanPham,Size,SizeSanPham,Nguoidung,NhaCungCap,GioHang,Chitietgiohang,Hoadon,Chitiethoadon,Otp
 from .form import dangkyform
 from django.contrib.auth.forms import AuthenticationForm
@@ -386,6 +387,37 @@ def xoagiohang(request, ct_id):
     xoa = Chitietgiohang.objects.get(id=ct_id)
     xoa.delete()
     return redirect('gh')
+
+
+def capnhat_soluong(request, ct_id):
+    if request.method == 'POST' and request.user.is_authenticated:
+        try:
+            import json
+            data = json.loads(request.body.decode('utf-8'))
+            qty = int(data.get('quantity', 0))
+        except Exception:
+            return JsonResponse({'error': 'Invalid data'}, status=400)
+
+        try:
+            ct = Chitietgiohang.objects.get(id=ct_id)
+        except Chitietgiohang.DoesNotExist:
+            return JsonResponse({'error': 'Item not found'}, status=404)
+
+        if qty < 1:
+            qty = 1
+
+        ct.so_luong = qty
+        ct.save()
+
+        # recompute cart total
+        giohang = ct.gio_hang
+        total = sum([float(i.thanhtien) for i in giohang.chitiet.all()])
+
+        return JsonResponse({
+            'line_total': float(ct.thanhtien),
+            'cart_total': total,
+        })
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 
 

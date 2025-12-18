@@ -5,46 +5,46 @@ document.addEventListener('DOMContentLoaded', function () {
   const btnLeft = document.querySelector('.banner-btn-left');
   const btnRight = document.querySelector('.banner-btn-right');
 
-  let currentIndex = 0;
-  const totalBanners = bannerImages.length;
-  const bannerWidth = 1024; // phải khớp CSS width
+    let currentIndex = 0;
+    const totalBanners = bannerImages.length;
+    const bannerWidth = 1024; // phải khớp CSS width
 
-  function showBanner(index) {
-    if (index < 0) {
-      currentIndex = totalBanners - 1;
-    } else if (index >= totalBanners) {
-      currentIndex = 0;
-    } else {
-      currentIndex = index;
+    function showBanner(index) {
+      if (index < 0) {
+        currentIndex = totalBanners - 1;
+      } else if (index >= totalBanners) {
+        currentIndex = 0;
+      } else {
+        currentIndex = index;
+      }
+
+      const offset = -currentIndex * bannerWidth;
+      banners.style.transform = `translateX(${offset}px)`;
     }
 
-    const offset = -currentIndex * bannerWidth;
-    banners.style.transform = `translateX(${offset}px)`;
-  }
+    // Nút trái
+    btnLeft.addEventListener('click', function () {
+      showBanner(currentIndex - 1);
+    });
 
-  // Nút trái
-  btnLeft.addEventListener('click', function () {
-    showBanner(currentIndex - 1);
-  });
+    // Nút phải
+    btnRight.addEventListener('click', function () {
+      showBanner(currentIndex + 1);
+    });
 
-  // Nút phải
-  btnRight.addEventListener('click', function () {
-    showBanner(currentIndex + 1);
-  });
-
-  // Tự động chuyển banner mỗi 5 giây
-  setInterval(function () {
-    showBanner(currentIndex + 1);
-  }, 5000);
+    // Tự động chuyển banner mỗi 5 giây
+    setInterval(function () {
+      showBanner(currentIndex + 1);
+    }, 5000);
 });
 
 // sidebar
 function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");
   sidebar.classList.toggle("collapsed");
-}
+  }
 
-    document.querySelectorAll('.cart-items').forEach(item => {
+  document.querySelectorAll('.cart-items').forEach(item => {
     const decreaseBtn = item.querySelector('.decrease');
     const increaseBtn = item.querySelector('.increase');
     const quantitySpan = item.querySelector('.qty');
@@ -53,13 +53,41 @@ function toggleSidebar() {
 
     decreaseBtn.addEventListener('click', () => {
         if (quantity > 1) {
-            quantity--;
+          quantity--;
             quantitySpan.textContent = quantity;
         }
     });
 
     increaseBtn.addEventListener('click', () => {
-        quantity++;
+      quantity++;
         quantitySpan.textContent = quantity;
     });
+  });
+
+// ----------
+document.addEventListener('DOMContentLoaded', function () {
+
+  // ===== BANNER =====
+  const banners = document.querySelector('.banners');
+  if (banners) {
+    const bannerImages = document.querySelectorAll('.banners img');
+    const btnLeft = document.querySelector('.banner-btn-left');
+    const btnRight = document.querySelector('.banner-btn-right');
+
+    let currentIndex = 0;
+    const totalBanners = bannerImages.length;
+    const bannerWidth = 1024;
+
+    function showBanner(index) {
+      if (index < 0) currentIndex = totalBanners - 1;
+      else if (index >= totalBanners) currentIndex = 0;
+      else currentIndex = index;
+
+      banners.style.transform = `translateX(${-currentIndex * bannerWidth}px)`;
+    }
+
+    btnLeft?.addEventListener('click', () => showBanner(currentIndex - 1));
+    btnRight?.addEventListener('click', () => showBanner(currentIndex + 1));
+  }
 });
+

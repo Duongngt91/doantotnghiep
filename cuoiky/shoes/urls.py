@@ -22,6 +22,7 @@ urlpatterns = [
     path('themvaogio/',views.themvaogio,name='tvg'),
     path('giohang/',views.giohang,name='gh'),
     path('xoagiohang/<int:ct_id>/',views.xoagiohang,name='xgh'),
+    path('capnhat_soluong/<int:ct_id>/', views.capnhat_soluong, name='capnhat_soluong'),
     path('thanhtoan/',views.thanhtoan,name='tt'),
     path('donhang/',views.donhang,name='dh'),
     path('xoadonhang/<int:dh_id>',views.xoa_donhang,name='xdh'),
