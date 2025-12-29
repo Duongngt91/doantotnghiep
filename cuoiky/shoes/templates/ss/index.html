@@ -21,22 +21,34 @@
       <div class="warper" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
         {%for s in giamgia%}
         <div class="Products-sale">
-          
-          <div>
-            {%if s.hinh_anh.all%}
-            <div class="image img"><img src="{{s.hinh_anh.first.hinh.url}}"></div>
-           {%endif%}
-          </div>  
-          <h3><a href="{%url 'ct' s.ma_sp %}" style ='color: black;
-    text-decoration: none;'> {{s.ten_sp}} </a></h3>
-          <p>{{s.mo_ta}}</p>
-          <div ><s>{{s.gia| floatformat:0 | intcomma}}đ</s> <strong>{{ s.gia | floatformat:0 | intcomma  }}đ</strong></div>
-        </div>
-        {% endfor %}
-       
+  
+            <div>
+              {%if s.hinh_anh.all%}
+              <div class="image img">
+                <img src="{{s.hinh_anh.first.hinh.url}}">
+              </div>
+              {%endif%}
+            </div>  
 
-    </div>
-  </section>
+            <h3>
+              <a href="{%url 'ct' s.ma_sp %}" style="color:black; text-decoration:none;">
+              {{s.ten_sp}}
+              </a>
+            </h3>
+
+      <p>{{s.mo_ta}}</p>
+
+        <div>
+          <s>{{s.gia|floatformat:0|intcomma}}đ</s>
+           <strong>{{ s.giam_gia|floatformat:0|intcomma }}đ</strong>
+        </div>
+
+    </div>  <!-- ✅ DÒNG QUAN TRỌNG BỊ THIẾU -->
+    {% endfor %}
+
+
+  </div>
+</section>
     
 </body>
 

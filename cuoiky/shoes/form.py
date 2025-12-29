@@ -6,8 +6,8 @@ from django.contrib.auth.forms import UserCreationForm
 class dangkyform (UserCreationForm ):
   class Meta:
     model = Nguoidung
-    fields = ['username','phone','email','address','password1','password2']
-
+    fields = ['username','phone','email','password1','password2']
+    
   def clean_email(self):
     email = self.cleaned_data.get('email')
     if Nguoidung.objects.filter(email=email).exists():

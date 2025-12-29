@@ -22,7 +22,6 @@ urlpatterns = [
     path('themvaogio/',views.themvaogio,name='tvg'),
     path('giohang/',views.giohang,name='gh'),
     path('xoagiohang/<int:ct_id>/',views.xoagiohang,name='xgh'),
-    path('capnhat_soluong/<int:ct_id>/', views.capnhat_soluong, name='capnhat_soluong'),
     path('thanhtoan/',views.thanhtoan,name='tt'),
     path('donhang/',views.donhang,name='dh'),
     path('xoadonhang/<int:dh_id>',views.xoa_donhang,name='xdh'),
@@ -38,4 +37,7 @@ urlpatterns = [
     path('xoanhacungcap/<int:ncc_xoa>',views.xoa_ncc,name='xncc'),
      path('xoadanhmuc/<int:dm_xoa>',views.xoa_dm,name='xdm'),
     path('xoanguoidung/<int:nd_xoa>',views.xoa_nd,name='xnd'),
+
+    path('thongtincanhan/',views.thongtin_nguoidung,name='ttnd'),
+    path('suathongtincanhan/',views.sua_thongtin,name='stt'),
 ]

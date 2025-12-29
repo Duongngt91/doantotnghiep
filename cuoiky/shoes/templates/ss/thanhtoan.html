@@ -67,8 +67,9 @@
             <!-- RIGHT -->
             <div class="checkout-right" style="width:40%;">
                 <h3>Thông tin giao hàng</h3>
-
-                <input type="text" name="dia_chi" placeholder="Nhập địa chỉ nhận hàng" required>
+                <input type="text" name="ten" value='{{ten}}' placeholder="Tên người nhận" required >
+                <input type="text" name="dia_chi" value='{{dc}}' placeholder="Nhập địa chỉ nhận hàng" required >
+                <input type="text" name="sdt" value='{{sdt}}' placeholder="Nhập số điện thoại" required >
 
                 <h3>Phương thức thanh toán</h3>
                 <label><input type="radio" name="phuong_thuc" value="cod" checked> Thanh toán khi nhận hàng</label><br>
@@ -76,7 +77,7 @@
 
                 <h3>Tổng kết đơn hàng</h3>
                 <p>Tạm tính: {{ tongtien|floatformat:0|intcomma }} đ</p>
-                <p>Phí ship: 0đ</p>
+                <p>Phí ship: {{ship|floatformat:0|intcomma}}đ</p>
                 <p><b>Tổng cộng: {{ tongtien|floatformat:0|intcomma }} đ</b></p>
 
                 <button type="submit">Xác nhận đặt hàng</button>

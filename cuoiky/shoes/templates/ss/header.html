@@ -3,92 +3,104 @@
 <link rel="stylesheet" href="{% static 'css/AllCSS.css'%}?v=2">
 
 <header>
-    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; list-style:none;">
-      <div>
-        <img src="{% static 'images/hinhanh/logo.png' %}" alt="TDK Logo" style="height: 150px;" />
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; list-style:none;">
+    <div>
+      <img src="{% static 'images/hinhanh/logo.png' %}" alt="TDK Logo" style="height: 150px;" />
+    </div>
+    <nav>
+      <div class="header-search">
+        <form action="{% url 'tk' %}" method="GET">
+            <input class="search-input" name='q'type="text" placeholder="Tìm kiếm...">
+            <button class="search-btn" type="submit"><i class="fa fa-search"></i></button>
+        </form>
       </div>
-      <nav>
-       <div class="header-search">
-    <form action="{% url 'tk' %}" method="GET">
-        <input class="search-input" name='q'type="text" placeholder="Tìm kiếm...">
-        <button class="search-btn" type="submit"><i class="fa fa-search"></i></button>
-    </form>
-</div>
-
-        <a
-        
-        
-        href="{% url 'tc'%}">HOME</a>
-        
+      <a href="{% url 'tc'%}">HOME</a>
         <div>
-              <a class="shop-btn">
-                SHOP <i class="fa-solid fa-angles-down"></i>
-              </a>
+          <a class="shop-btn">
+            SHOP <i class="fa-solid fa-angles-down"></i>
+          </a>
           <div class="list">
             {%for h in hang %}
                 <a href="{% url 'cth' h.id%}" >{{h.ten_ncc}}</a>
             {%endfor%}
-        
           </div>
-
-
         </div>
-        {%if not user.is_authenticated%}
-        {%if request.resolver_match.url_name == 'dn'%}
-          <a href="{% url 'dk'%}">SIGN UP</a>
-        {%elif request.resolver_match.url_name == 'dk' %}
-          <a href="{% url 'dn'%}">LOG IN</a>
-        {%else%}
+          {%if not user.is_authenticated%}
+          {%if request.resolver_match.url_name == 'dn'%}
             <a href="{% url 'dk'%}">SIGN UP</a>
+          {%elif request.resolver_match.url_name == 'dk' %}
             <a href="{% url 'dn'%}">LOG IN</a>
-            {%endif%}
-            {%endif%}
-            {%if user.is_authenticated%}
-            {%if user.is_staff%}    
-            <li class="nav-item " 
-            >
-            <span class="shop-btn"><i class="fa-solid fa-user"></i> <b>{{user.username}}</b></span>
-          </li>
-          
-          <li class="nav-item ">
-            <a href = {% url 'qt' %} class="shop-btn"> 📊 <b>Dashboard</b></a> 
-          </li>
-          
-          <li class="nav-item " >
-            <a href="{% url 'dx'%}">
-              <span class="navbar-text">Đăng xuất</b></span>
-            </a>
-          </li>
           {%else%}
-          <a href="{% url 'gh'%}">
-  <div id="cart-icon" style="position: relative; display: inline-block;">
-    <i class="fa-solid fa-cart-shopping" style="font-size: 26px;"></i>
-  
-    <!-- Số lượng giỏ -->
-    <span id="cart-count"
-          style="position:absolute; top:-8px; right:-10px;
-                 background:red; color:white; 
-                 padding:2px 6px; font-size:12px;
-                 border-radius:50%; font-weight:bold;">
-        0
-    </span>
-  </div>
-  </a>
-          <a href="{% url 'dh'%}" style="font-family: Arial, Helvetica, sans-serif;">
-            <i class="fa-solid fa-bag-shopping"></i> Dơn hàng
-          </a>
-                <li class="nav-item">
-                    <span class="navbar-text" style="color:rgb(41, 200, 249)"><i class="fa-regular fa-user"></i> <b>{{user.username}}</b></span>
-                </li>
-
-              <a href="{% url 'dx' %}" >
-                  <span class="navbar-text">Đăng xuất</b></span>
+              <a href="{% url 'dk'%}">SIGN UP</a>
+              <a href="{% url 'dn'%}">LOG IN</a>
+              {%endif%}
+              {%endif%}
+              {%if user.is_authenticated%}
+              {%if user.is_staff%}    
+              <li class="nav-item " 
+              >
+              <span class="shop-btn" style="color:rgb(41, 200, 249)"><i class="fa-solid fa-user"></i> <b>{{user.username}}</b></span>
+            </li>
+            
+            <li class="nav-item ">
+              <a href = {% url 'qt' %} class="shop-btn"> 📊 <b>Dashboard</b></a> 
+            </li>
+            
+            <li class="nav-item " >
+              <a href="{% url 'dx'%}">
+                <span class="navbar-text">Đăng xuất</b></span>
               </a>
-            {%endif%}
-        {%endif%}
-      </nav>
+            </li>
+            {%else%}
+            <a href="{% url 'gh'%}">
+              <div id="cart-icon" style="position: relative; display: inline-block;">
+              <i class="fa-solid fa-cart-shopping" style="font-size: 26px;"></i>
+    
+            <!-- Số lượng giỏ -->
+            <span id="cart-count"
+              style="position:absolute; top:-8px; right:-10px;
+                    background:red; color:white; 
+                    padding:2px 6px; font-size:12px;
+                    border-radius:50%; font-weight:bold;">
+                    {{ cart_count|default:0 }}
+            </span>
+          </div>
+        </a>
+            <a href="{% url 'dh'%}" style="font-family: Arial, Helvetica, sans-serif;">
+                  <span class="bi bi-receipt" >ĐƠN HÀNG</span>          
+            </a>
+            <a href="{% url 'ttnd'%}">
+              <li class="nav-item">
+                <span class="navbar-text" style="color:rgb(41, 200, 249)"><i class="fa-regular fa-user"></i> <b>{{user.username}}</b></span>
+              </li>
+              {% comment %} <li class="nav-item">
+                <a href="{% url 'ttcn' %}">
+                  <span class="navbar-text">Thông tin cá nhân</span>
+                </a>
+              </li> {% endcomment %}
+            </a>
+          {%endif%}
+          {%endif%}
+        </nav>
+      </div>
+      {% if messages %}
+    <div class="container mt-3">
+      {% for message in messages %}
+          <div class="alert 
+              {% if message.tags == 'success' %}alert-success
+              {% elif message.tags == 'error' %}alert-danger
+              {% elif message.tags == 'warning' %}alert-warning
+              {% else %}alert-info{% endif %}
+              alert-dismissible fade show" role="alert">
+
+              {{ message }}
+
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+      {% endfor %}
     </div>
-  </header>
+  {% endif %}
+</header>
   <script>
     (function(){
       const toggle = document.getElementById('shop-toggle');
